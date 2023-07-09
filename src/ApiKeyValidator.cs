@@ -16,14 +16,34 @@ namespace ApiKeyGenerator
             _repository = repository;
         }
 
+        /// <summary>
+        /// Validate a client's API key string.  If successful, returns the matching persisted API key with all
+        /// relevant claims information from your persistent storage.  If unable to validate, returns information that
+        /// can assist the developer in understanding why their key could not be validated.  Consult your security
+        /// professionals to identify which diagnostic information should be exposed to your end users.
+        /// </summary>
+        /// <param name="clientApiKeyString">The raw client API key string as provided to your API</param>
+        /// <returns>A result object with information about validation</returns>
         public async Task<ApiKeyResult> TryValidate(string clientApiKeyString)
         {
             if (string.IsNullOrWhiteSpace(clientApiKeyString))
             {
                 return new ApiKeyResult() { Message = "Key is null or empty." };
             }
+            
+            // Determine supported algorithms, or default
             var algorithms = new List<ApiKeyAlgorithm>();
-            algorithms.AddRange(_repository.GetSupportedAlgorithms());
+            var supported = _repository.GetSupportedAlgorithms();
+            if (supported != null)
+            {
+                algorithms.AddRange(supported);
+            }
+            else
+            {
+                algorithms.Add(ApiKeyAlgorithm.DefaultAlgorithm);
+            }
+            
+            // Check all supported algorithms to see if this API key is valid
             foreach (var algorithm in algorithms)
             {
                 if (clientApiKeyString.StartsWith(algorithm.Prefix))
@@ -114,7 +134,7 @@ namespace ApiKeyGenerator
                 return false;
             }
             var keyGuid = new Guid(keyBytes);
-            var clientSecret = key.Substring(pos, pos - algorithm.Suffix.Length);
+            var clientSecret = key.Substring(pos + 1, key.Length - algorithm.Suffix.Length - 1 - pos);
             
             // Construct a new valid key
             value = new ClientApiKey() { ApiKeyId = keyGuid, ClientSecret = clientSecret };
