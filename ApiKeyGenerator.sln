@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiKeyGenerator", "src\ApiKeyGenerator.csproj", "{ECF41556-1705-4C58-ABA3-7E25E8099438}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiKeyGenerator.Tests", "ApiKeyGenerator.Tests\ApiKeyGenerator.Tests.csproj", "{8A742AB5-ED8C-48D7-8C05-B14450C5F799}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{9A88F86E-FDE5-4AF6-B494-5CF79DFDA98C}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ECF41556-1705-4C58-ABA3-7E25E8099438}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECF41556-1705-4C58-ABA3-7E25E8099438}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECF41556-1705-4C58-ABA3-7E25E8099438}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECF41556-1705-4C58-ABA3-7E25E8099438}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A742AB5-ED8C-48D7-8C05-B14450C5F799}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A742AB5-ED8C-48D7-8C05-B14450C5F799}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A742AB5-ED8C-48D7-8C05-B14450C5F799}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A742AB5-ED8C-48D7-8C05-B14450C5F799}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
