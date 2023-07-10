@@ -1,3 +1,8 @@
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/tspence/api-key-generator/dotnet.yml?branch=main)
+[![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=tspence_api-key-generator&metric=coverage)](https://sonarcloud.io/component_measures/metric/coverage/list?id=tspence_api-key-generator)
+[![SonarCloud Bugs](https://sonarcloud.io/api/project_badges/measure?project=tspence_api-key-generator&metric=bugs)](https://sonarcloud.io/component_measures/metric/reliability_rating/list?id=tspence_api-key-generator)
+[![SonarCloud Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=tspence_api-key-generator&metric=vulnerabilities)](https://sonarcloud.io/component_measures/metric/security_rating/list?id=tspence_api-key-generator)
+
 # API Key Generator
 
 A DotNet library for generating and validating API keys.  Although there are lots of libraries out there that help you
