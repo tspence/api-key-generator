@@ -14,8 +14,10 @@ public class BasicKeyTests
         var validator = new ApiKeyValidator(repository);
         
         // Generate a key
-        var persistedKey = new PersistedApiKey();
-        persistedKey.KeyName = "TestKeyGeneration";
+        var persistedKey = new PersistedApiKey
+        {
+            KeyName = "TestKeyGeneration"
+        };
         Assert.AreEqual(Guid.Empty, persistedKey.ApiKeyId);
         var apiKeyString = await validator.GenerateApiKey(persistedKey);
         Assert.AreNotEqual(string.Empty, apiKeyString);
