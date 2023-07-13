@@ -22,7 +22,7 @@
 			# 0.9.1
 			July 13, 2023
 			
-			Updated some exceptions to include more readable error message values.
+			First release to NuGet; still in development.
 		</releaseNotes>
 		<copyright>Copyright 2023 - 2023</copyright>
     	<tags>apikey rest authentication authorization bearer token api-key</tags>
@@ -36,6 +36,6 @@
 		<file src=".\README.md" target="docs/README.md"/>
 		<file src=".\api-key-generator.png" target="docs/api-key-generator.png"/>
 		<file src=".\PatchNotes.md" target="docs/PatchNotes.md"/>
-		<file src="src\ApiKeyGenerator\bin\Release\netstandard2.0\*" target="lib\netstandard20" />
+		<file src="src\bin\Release\netstandard2.0\*" target="lib\netstandard20" />
 	</files>
 </package>
