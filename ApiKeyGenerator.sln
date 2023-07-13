@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{9A88F86E
 		README.md = README.md
 		.gitignore = .gitignore
 		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
+		.github\workflows\nuget-publish.yml = .github\workflows\nuget-publish.yml
+		api-key-generator.nuspec = api-key-generator.nuspec
 	EndProjectSection
 EndProject
 Global

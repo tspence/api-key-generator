@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<package >
+	<metadata>
+		<id>ApiKeyGenerator</id>
+		<version>0.9.1</version>
+		<title>ApiKeyGenerator</title>
+		<authors>Ted Spence</authors>
+		<owners>Ted Spence</owners>
+		<license type="file">docs/LICENSE</license>
+		<projectUrl>https://github.com/tspence/api-key-generator</projectUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<readme>docs/README.md</readme>
+		<description>
+			This library only performs the key generation and key validation functions that your service requires.
+			It provides interfaces for you to integrate with key generation systems, database storage systems, and
+			authentication validation systems.  Support for multiple key algorithms means you can update your key
+			generation logic as security best practices evolve, while ensuring that old keys will continue to work.
+		</description>
+		<summary>Generate and validate API Keys in a `salt + key => hash` format.</summary>
+		<icon>docs/api-key-generator.png</icon>
+		<releaseNotes>
+			# 0.9.1
+			July 13, 2023
+			
+			Updated some exceptions to include more readable error message values.
+		</releaseNotes>
+		<copyright>Copyright 2023 - 2023</copyright>
+    	<tags>apikey rest authentication authorization bearer token api-key</tags>
+		<repository type="git" url="https://github.com/tspence/csharp-searchlight" />
+		<dependencies>
+			<group targetFramework=".NETStandard2.0"/>
+		</dependencies>
+	</metadata>
+	<files>
+		<file src=".\LICENSE" target="docs/LICENSE"/>
+		<file src=".\README.md" target="docs/README.md"/>
+		<file src=".\api-key-generator.png" target="docs/api-key-generator.png"/>
+		<file src=".\PatchNotes.md" target="docs/PatchNotes.md"/>
+		<file src="src\ApiKeyGenerator\bin\Release\netstandard2.0\*" target="lib\netstandard20" />
+	</files>
+</package>
