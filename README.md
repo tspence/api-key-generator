@@ -1,7 +1,7 @@
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/tspence/api-key-generator/dotnet.yml?branch=main)
-[![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=tspence_api-key-generator&metric=coverage)](https://sonarcloud.io/component_measures/metric/coverage/list?id=tspence_api-key-generator)
-[![SonarCloud Bugs](https://sonarcloud.io/api/project_badges/measure?project=tspence_api-key-generator&metric=bugs)](https://sonarcloud.io/component_measures/metric/reliability_rating/list?id=tspence_api-key-generator)
-[![SonarCloud Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=tspence_api-key-generator&metric=vulnerabilities)](https://sonarcloud.io/component_measures/metric/security_rating/list?id=tspence_api-key-generator)
+[![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=tspence_api-key-generator&metric=coverage)](https://sonarcloud.io/summary/overall?id=tspence_api-key-generator)
+[![SonarCloud Bugs](https://sonarcloud.io/api/project_badges/measure?project=tspence_api-key-generator&metric=bugs)](https://sonarcloud.io/summary/overall?id=tspence_api-key-generator)
+[![SonarCloud Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=tspence_api-key-generator&metric=vulnerabilities)](https://sonarcloud.io/summary/overall?id=tspence_api-key-generator)
 
 # API Key Generator
 
@@ -28,3 +28,5 @@ For usability, this library works on a few basic principles:
 * The validation and key generation logic are as general purpose as possible so you can fit this library anywhere.
 
 # Using the API Key Generator
+
+Still working on this documentation
