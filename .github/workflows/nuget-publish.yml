@@ -33,7 +33,7 @@ jobs:
           nuget-version: "5.x"
 
       - name: Run Nuget pack
-        run: nuget pack LockstepApi.nuspec
+        run: nuget pack api-key-generator.nuspec
 
       - name: Push generated package to GitHub registry
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
