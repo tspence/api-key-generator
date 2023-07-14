@@ -27,3 +27,19 @@ For usability, this library works on a few basic principles:
 * The Key ID is a GUID that can be used to uniquely identify the key in your storage system.
 * Salt and hash values can be stored wherever you like, as long as you can fetch them back for validation.  
 * The validation and key generation logic are as general purpose as possible so you can fit this library anywhere.
+
+# Algorithm Performance
+
+These performance statistics were measured on my laptop, a Dell I7-12700H.  Benchmarks measure the length of time
+taken to do 1,000 iterations of Generate or Validate.
+
+|   Method |   HashType |          Mean |      Error |     StdDev |
+|--------- |----------- |--------------:|-----------:|-----------:|
+| Generate |     SHA256 |      2.659 ms |  0.0269 ms |  0.0239 ms |
+| Validate |     SHA256 |      1.214 ms |  0.0091 ms |  0.0085 ms |
+| Generate |     SHA512 |      3.321 ms |  0.0217 ms |  0.0203 ms |
+| Validate |     SHA512 |      1.821 ms |  0.0078 ms |  0.0061 ms |
+| Generate |     BCrypt | 12,097.053 ms | 32.9440 ms | 30.8158 ms |
+| Validate |     BCrypt | 12,183.813 ms | 39.5346 ms | 36.9807 ms |
+| Generate | PBKDF2100K |  9,105.861 ms | 32.3737 ms | 30.2824 ms |
+| Validate | PBKDF2100K |  9,153.661 ms | 51.2219 ms | 47.9130 ms |
