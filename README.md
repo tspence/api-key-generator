@@ -1,4 +1,5 @@
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/tspence/api-key-generator/dotnet.yml?branch=main)
+[![Nuget](https://img.shields.io/nuget/v/ApiKeyGenerator)](https://www.nuget.org/packages/ApiKeyGenerator)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/tspence/api-key-generator/dotnet.yml?branch=main)](https://github.com/tspence/api-key-generator/)
 [![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=tspence_api-key-generator&metric=coverage)](https://sonarcloud.io/summary/overall?id=tspence_api-key-generator)
 [![SonarCloud Bugs](https://sonarcloud.io/api/project_badges/measure?project=tspence_api-key-generator&metric=bugs)](https://sonarcloud.io/summary/overall?id=tspence_api-key-generator)
 [![SonarCloud Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=tspence_api-key-generator&metric=vulnerabilities)](https://sonarcloud.io/summary/overall?id=tspence_api-key-generator)
@@ -13,15 +14,16 @@ The goal of this library is to strike the right balance between usability and re
 
 This library implements encryption of API keys as follows:
 * The default algorithm uses BCrypt on key + salt.
-* You can choose SHA256 or SHA512 if you prefer.
-* Keys and salts are 512 bits of randomness. 
+* Hashing algorithms available include SHA256, SHA512, BCrypt, and PBKDF with 100k iterations.
+* Key and salt length is configurable, defaulting to 512 bits / 64 bytes of randomness. 
 
 The library is intended to support future generations of algorithms while still being compatible with previously
 generated API keys.
 
 For usability, this library works on a few basic principles:
 * API key validation should be able to give clear error messages if the key is malformed.
-* An API key is in the form `<prefix><key ID>:<client secret><suffix>`.
+* API keys are encoded with Base58 so they can be double-clicked to select the entire key.
+* An API key is in the form `<prefix><key ID>_<client secret><suffix>`.
 * The prefix and suffix values determine if the client is sending the wrong API key, or if the key has been truncated.
 * The prefix and suffix also determine which generation of algorithm your key uses.
 * The Key ID is a GUID that can be used to uniquely identify the key in your storage system.
