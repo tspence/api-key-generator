@@ -1,3 +1,8 @@
+# 0.9.3
+July 14, 2023
+
+Switch default algorithm to PBKDF2 with 100K iterations as specified by NIST 800-63B section 5.1.1.2.
+
 # 0.9.2
 July 13, 2023
 
