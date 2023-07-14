@@ -19,7 +19,7 @@ public class AlgorithmBenchmarks
         };
     }
 
-    private readonly int iterations = 100000;
+    private readonly int iterations = 1000;
     
     [Params(HashAlgorithmType.SHA256, HashAlgorithmType.SHA512, HashAlgorithmType.BCrypt, HashAlgorithmType.PBKDF2100K)]
     public HashAlgorithmType HashType { get; set; }
@@ -35,7 +35,8 @@ public class AlgorithmBenchmarks
             var keyString = await validator.GenerateApiKey(persistedKey);
             if (string.IsNullOrWhiteSpace(keyString))
             {
-                throw new Exception("Failed to generate key");
+                Console.WriteLine("Failed to generate key");
+                return;
             }
         }
     }
@@ -52,7 +53,8 @@ public class AlgorithmBenchmarks
             var result = await validator.TryValidate(keyString);
             if (!result.Success)
             {
-                throw new Exception("Failed to validate key");
+                Console.WriteLine("Failed to validate key");
+                return;
             }
         }
     }

@@ -2,11 +2,13 @@
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 
-class Program
+namespace ApiKeyGenerator.Benchmarks
 {
-    static void Main(string[] args)
+    class Program
     {
-        var summary = BenchmarkRunner.Run<AlgorithmBenchmarks>();
+        static void Main(string[] args)
+        {
+            var summary = BenchmarkRunner.Run<AlgorithmBenchmarks>();
+        }
     }
-    
 }

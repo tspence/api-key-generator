@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using ApiKeyGenerator.Interfaces;
+﻿using ApiKeyGenerator.Interfaces;
 
 namespace ApiKeyGenerator.Benchmarks;
 
 public class TestRepository : IApiKeyRepository
 {
-    private Dictionary<Guid, IPersistedApiKey> _dictionary = new();
+    private readonly Dictionary<Guid, IPersistedApiKey> _dictionary = new();
     
     public ApiKeyAlgorithm? Algorithm { get; set; }
 
