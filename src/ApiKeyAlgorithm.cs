@@ -12,7 +12,7 @@
         {
             Prefix = "kpb",
             Suffix = "aei",
-            Hash = HashAlgorithmType.BCrypt,
+            Hash = HashAlgorithmType.PBKDF2100K,
             ClientSecretLength = 64,
             SaltLength = 64,
         };

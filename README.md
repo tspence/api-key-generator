@@ -37,6 +37,7 @@ The following articles are relevant to this library:
 * [ProcedureFlow 2021 article on API key usability](https://medium.com/procedureflow-engineering/building-api-authentication-at-procedureflow-4d1fe78bb293)
 * [My 2023 blog on API key usability](https://tedspence.com/what-makes-a-good-api-key-system-c7211de5ad33)
 * [Netmux 2018 article on creating a hashcat computer for brute force attacks](https://www.netmux.com/blog/how-to-build-a-password-cracking-rig)
+* [NIST 800-63B section 5.1.1.2](https://pages.nist.gov/800-63-3/sp800-63b.html) - recommendation to use PBKDF2 with at least 10,000 iterations
 
 # Algorithm Performance
 
