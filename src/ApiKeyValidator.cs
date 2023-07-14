@@ -158,22 +158,29 @@ namespace ApiKeyGenerator
         {
             var algorithm = _repository.GetNewKeyAlgorithm() ?? ApiKeyAlgorithm.DefaultAlgorithm;
             var keyId = Guid.NewGuid();
-            var rand = new Random();
+            var rand = RandomNumberGenerator.Create();
             var secretBytes = new byte[algorithm.ClientSecretLength];
-            rand.NextBytes(secretBytes);
-            var clientSecret = Convert.ToBase64String(secretBytes);
-            var saltBytes = new byte[algorithm.SaltLength];
-            rand.NextBytes(saltBytes);
-            var fullKey = new List<byte>(secretBytes);
-            fullKey.AddRange(saltBytes);
-            
+            rand.GetBytes(secretBytes);
+            var secret = Convert.ToBase64String(secretBytes);
+            string salt;
+            if (algorithm.Hash == HashAlgorithmType.BCrypt)
+            {
+                salt = BCrypt.Net.BCrypt.GenerateSalt();
+            }
+            else
+            {
+                var saltBytes = new byte[algorithm.SaltLength];
+                rand.GetBytes(saltBytes);
+                salt = Convert.ToBase64String(saltBytes);
+            }
+
             // Construct client key
-            var clientKey = new ClientApiKey() { ApiKeyId = keyId, ClientSecret = clientSecret };
+            var clientKey = new ClientApiKey() { ApiKeyId = keyId, ClientSecret = secret };
             
             // Fill information into persisted key
             persisted.ApiKeyId = keyId;
-            persisted.Hash = Hash(algorithm.Hash, fullKey.ToArray());
-            persisted.Salt = Convert.ToBase64String(saltBytes);
+            persisted.Hash = Hash(algorithm.Hash, secret, salt);
+            persisted.Salt = salt;
             
             // Save this API key into the repository
             if (!(await _repository.SaveKey(persisted)))
@@ -187,25 +194,40 @@ namespace ApiKeyGenerator
 
         private bool TestKeys(ApiKeyAlgorithm algorithm, ClientApiKey clientApiKey, IPersistedApiKey persistedApiKey)
         {
-            var secretBytes = Convert.FromBase64String(clientApiKey.ClientSecret);
-            var saltBytes = Convert.FromBase64String(persistedApiKey.Salt);
-            var fullKey = new List<byte>(secretBytes);
-            fullKey.AddRange(saltBytes);
-            
             // Compute hash and see if it matches
-            var computedHash = Hash(algorithm.Hash, fullKey.ToArray());
+            var computedHash = Hash(algorithm.Hash, clientApiKey.ClientSecret, persistedApiKey.Salt);
             return string.Equals(computedHash, persistedApiKey.Hash);
         }
 
-        private static string Hash(HashAlgorithmType hashType, byte[] rawToken)
+        private static List<byte> SecretAndSaltToBytes(string secret, string salt)
         {
-            if (hashType == HashAlgorithmType.SHA256)
+            var secretBytes = Convert.FromBase64String(secret);
+            var saltBytes = Convert.FromBase64String(salt);
+            var fullKey = new List<byte>(secretBytes);
+            fullKey.AddRange(saltBytes);
+            return fullKey;
+        }
+
+        private static string Hash(HashAlgorithmType hashType, string secret, string salt)
+        {
+            switch (hashType)
             {
-                using (var sha256 = SHA256.Create())
-                {
-                    var bytes = sha256.ComputeHash(rawToken);
-                    return Convert.ToBase64String(bytes);
-                }
+                case HashAlgorithmType.SHA256:
+                    using (var sha256 = SHA256.Create())
+                    {
+                        var rawBytes = SecretAndSaltToBytes(secret, salt);
+                        var hashBytes = sha256.ComputeHash(rawBytes.ToArray());
+                        return Convert.ToBase64String(hashBytes);
+                    }
+                case HashAlgorithmType.SHA512:
+                    using (var sha512 = SHA512.Create())
+                    {
+                        var rawBytes = SecretAndSaltToBytes(secret, salt);
+                        var hashBytes = sha512.ComputeHash(rawBytes.ToArray());
+                        return Convert.ToBase64String(hashBytes);
+                    }
+                case HashAlgorithmType.BCrypt:
+                    return BCrypt.Net.BCrypt.HashPassword(secret, salt);
             }
 
             throw new Exception($"Unknown hash type {hashType}");

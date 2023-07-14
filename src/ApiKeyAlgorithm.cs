@@ -5,14 +5,14 @@
         /// <summary>
         /// Default algorithm:
         /// * Prefix and Suffix are "api" and "key" slightly mixed up
-        /// * Hash algorithm is SHA256
-        /// * Client secret and salt are both 512 bits / 64 bytes
+        /// * Hash algorithm is BCrypt
+        /// * Client secret and salt are both 512 bits (64 bytes)
         /// </summary>
         public static ApiKeyAlgorithm DefaultAlgorithm = new ApiKeyAlgorithm()
         {
-            Prefix = "kpy",
+            Prefix = "kpb",
             Suffix = "aei",
-            Hash = HashAlgorithmType.SHA256,
+            Hash = HashAlgorithmType.BCrypt,
             ClientSecretLength = 64,
             SaltLength = 64,
         };
