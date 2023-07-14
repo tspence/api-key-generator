@@ -58,7 +58,7 @@ namespace ApiKeyGenerator
                     if (persistedApiKey == null)
                     {
                         return new ApiKeyResult()
-                            { Message = $"Repository does not contain a key with ID {clientApiKey.ApiKeyId}." };
+                            { Message = $"Repository does not contain a key matching this ID." };
                     }
                     if (TestKeys(algorithm, clientApiKey, persistedApiKey))
                     {
@@ -127,7 +127,17 @@ namespace ApiKeyGenerator
             
             // Extract the key ID and client secret
             var keyId = key.Substring(algorithm.Prefix.Length, pos - algorithm.Prefix.Length);
-            var keyBytes = Convert.FromBase64String(keyId);
+            byte[] keyBytes;
+            try
+            {
+                keyBytes = Convert.FromBase64String(keyId);
+            }
+            catch
+            {
+                keyBytes = Array.Empty<byte>();
+                // Ignore - wish DotNetStandard 2.0 had a non-exception version of FromBase64String!
+            }
+
             if (keyBytes.Length != 16)
             {
                 message = "Key ID is not properly formatted.";
@@ -201,10 +211,19 @@ namespace ApiKeyGenerator
 
         private static List<byte> SecretAndSaltToBytes(string secret, string salt)
         {
-            var secretBytes = Convert.FromBase64String(secret);
-            var saltBytes = Convert.FromBase64String(salt);
-            var fullKey = new List<byte>(secretBytes);
-            fullKey.AddRange(saltBytes);
+            var fullKey = new List<byte>();
+            try
+            {
+                var secretBytes = Convert.FromBase64String(secret);
+                var saltBytes = Convert.FromBase64String(salt);
+                fullKey.AddRange(secretBytes);
+                fullKey.AddRange(saltBytes);
+            }
+            catch
+            {
+                // Ignore - wish DotNetStandard 2.0 had a non-exception version of FromBase64String!
+            }
+
             return fullKey;
         }
 
