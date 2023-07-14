@@ -8,6 +8,8 @@ namespace ApiKeyGenerator.Tests;
 public class TestRepository : IApiKeyRepository
 {
     private Dictionary<Guid, IPersistedApiKey> _dictionary = new();
+    
+    public ApiKeyAlgorithm? Algorithm { get; set; }
 
     public async Task<IPersistedApiKey?> GetKey(Guid id)
     {
@@ -29,11 +31,16 @@ public class TestRepository : IApiKeyRepository
 
     public IEnumerable<ApiKeyAlgorithm>? GetSupportedAlgorithms()
     {
-        return null;
+        if (Algorithm == null)
+        {
+            return null;
+        }
+
+        return new[] { Algorithm };
     }
 
     public ApiKeyAlgorithm? GetNewKeyAlgorithm()
     {
-        return null;
+        return Algorithm;
     }
 }

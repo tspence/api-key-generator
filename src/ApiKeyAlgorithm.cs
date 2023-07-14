@@ -17,10 +17,27 @@
             SaltLength = 64,
         };
         
+        /// <summary>
+        /// The prefix to use when generating an API key string for client use.
+        /// </summary>
         public string Prefix { get; set; }
+        /// <summary>
+        /// The suffix to use when generating an API key string for client use.
+        /// </summary>
         public string Suffix { get; set; }
+        /// <summary>
+        /// The hash algorithm to use.  Note that BCrypt is significantly slower
+        /// than SHA256 or SHA512, but it is more resistant to brute force attacks.
+        /// </summary>
         public HashAlgorithmType Hash { get; set; }
+        /// <summary>
+        /// The number of bytes to use for the length of the client secret.
+        /// </summary>
         public int ClientSecretLength { get; set; }
+        /// <summary>
+        /// The number of bytes to use for the salt. In the case of BCrypt, this value
+        /// is ignored and BCrypt's recommended salt length is used instead.
+        /// </summary>
         public int SaltLength { get; set; }
     }
 }
