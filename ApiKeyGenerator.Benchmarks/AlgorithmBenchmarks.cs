@@ -19,8 +19,8 @@ public class AlgorithmBenchmarks
         };
     }
 
-    private readonly int iterations = 1000;
-    
+    private const int Iterations = 100;
+
     [Params(HashAlgorithmType.SHA256, HashAlgorithmType.SHA512, HashAlgorithmType.BCrypt, HashAlgorithmType.PBKDF2100K)]
     public HashAlgorithmType HashType { get; set; }
 
@@ -29,7 +29,7 @@ public class AlgorithmBenchmarks
     {
         var repository = MakeTestRepository(HashType);
         var validator = new ApiKeyValidator(repository);
-        for (int i = 0; i < iterations; i++)
+        for (int i = 0; i < Iterations; i++)
         {
             var persistedKey = new PersistedKey() { KeyName = $"Test Key {i}" };
             var keyString = await validator.GenerateApiKey(persistedKey);
@@ -48,7 +48,7 @@ public class AlgorithmBenchmarks
         var validator = new ApiKeyValidator(sha256Repo);
         var persistedKey = new PersistedKey() { KeyName = $"Test Key" };
         var keyString = await validator.GenerateApiKey(persistedKey);
-        for (int i = 0; i < iterations; i++)
+        for (int i = 0; i < Iterations; i++)
         {
             var result = await validator.TryValidate(keyString);
             if (!result.Success)
