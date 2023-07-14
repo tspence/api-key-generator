@@ -23,7 +23,7 @@ namespace ApiKeyGenerator.Interfaces
         string Salt { get; set; }
 
         /// <summary>
-        /// This is the hash computed as SHA256(ClientSecret + Salt) and stored using Base64.
+        /// This is the hash computed as Hash_Algorithm(ClientSecret + Salt).
         /// </summary>
         string Hash { get; set; }
         

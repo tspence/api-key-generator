@@ -12,7 +12,8 @@ and validation using relatively safe practices.
 The goal of this library is to strike the right balance between usability and reliability.
 
 This library implements encryption of API keys as follows:
-* Encryption uses SHA256 on key + salt.
+* The default algorithm uses BCrypt on key + salt.
+* You can choose SHA256 or SHA512 if you prefer.
 * Keys and salts are 512 bits of randomness. 
 
 The library is intended to support future generations of algorithms while still being compatible with previously
@@ -24,9 +25,21 @@ For usability, this library works on a few basic principles:
 * The prefix and suffix values determine if the client is sending the wrong API key, or if the key has been truncated.
 * The prefix and suffix also determine which generation of algorithm your key uses.
 * The Key ID is a GUID that can be used to uniquely identify the key in your storage system.
-* Keys can be stored in a database, REDIS, filesystem, or any other persistence mechanism.  
+* Salt and hash values can be stored wherever you like, as long as you can fetch them back for validation.  
 * The validation and key generation logic are as general purpose as possible so you can fit this library anywhere.
 
-# Using the API Key Generator
+# Algorithm Performance
 
-Still working on this documentation
+These performance statistics were measured on my laptop, a Dell I7-12700H.  Benchmarks measure the length of time
+taken to do 1,000 iterations of Generate or Validate.
+
+|   Method |   HashType |          Mean |      Error |     StdDev |
+|--------- |----------- |--------------:|-----------:|-----------:|
+| Generate |     SHA256 |      2.659 ms |  0.0269 ms |  0.0239 ms |
+| Validate |     SHA256 |      1.214 ms |  0.0091 ms |  0.0085 ms |
+| Generate |     SHA512 |      3.321 ms |  0.0217 ms |  0.0203 ms |
+| Validate |     SHA512 |      1.821 ms |  0.0078 ms |  0.0061 ms |
+| Generate |     BCrypt | 12,097.053 ms | 32.9440 ms | 30.8158 ms |
+| Validate |     BCrypt | 12,183.813 ms | 39.5346 ms | 36.9807 ms |
+| Generate | PBKDF2100K |  9,105.861 ms | 32.3737 ms | 30.2824 ms |
+| Validate | PBKDF2100K |  9,153.661 ms | 51.2219 ms | 47.9130 ms |

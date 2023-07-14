@@ -2,7 +2,9 @@
 {
     public enum HashAlgorithmType
     {
-        // Primary algorithm supported for now; can potentially support others in the future
         SHA256 = 1,
+        SHA512 = 2,
+        BCrypt = 3,
+        PBKDF2100K = 4,
     }
 }
