@@ -12,7 +12,8 @@ and validation using relatively safe practices.
 The goal of this library is to strike the right balance between usability and reliability.
 
 This library implements encryption of API keys as follows:
-* Encryption uses SHA256 on key + salt.
+* The default algorithm uses BCrypt on key + salt.
+* You can choose SHA256 or SHA512 if you prefer.
 * Keys and salts are 512 bits of randomness. 
 
 The library is intended to support future generations of algorithms while still being compatible with previously
@@ -24,9 +25,5 @@ For usability, this library works on a few basic principles:
 * The prefix and suffix values determine if the client is sending the wrong API key, or if the key has been truncated.
 * The prefix and suffix also determine which generation of algorithm your key uses.
 * The Key ID is a GUID that can be used to uniquely identify the key in your storage system.
-* Keys can be stored in a database, REDIS, filesystem, or any other persistence mechanism.  
+* Salt and hash values can be stored wherever you like, as long as you can fetch them back for validation.  
 * The validation and key generation logic are as general purpose as possible so you can fit this library anywhere.
-
-# Using the API Key Generator
-
-Still working on this documentation
