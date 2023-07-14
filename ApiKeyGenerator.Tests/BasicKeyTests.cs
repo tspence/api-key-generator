@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SimpleBase;
 
 namespace ApiKeyGenerator.Tests;
 
@@ -12,6 +13,7 @@ public class BasicKeyTests
     [DataRow(HashAlgorithmType.SHA256)]
     [DataRow(HashAlgorithmType.SHA512)]
     [DataRow(HashAlgorithmType.BCrypt)]
+    [DataRow(HashAlgorithmType.PBKDF2100K)]
     public async Task TestAlgorithm(HashAlgorithmType? hashType)
     {
         var repository = new TestRepository();
@@ -37,6 +39,11 @@ public class BasicKeyTests
         var apiKeyString = await validator.GenerateApiKey(persistedKey);
         Assert.AreNotEqual(string.Empty, apiKeyString);
         Assert.AreNotEqual(Guid.Empty, persistedKey.ApiKeyId);
+        
+        // Generate a second key - they should not match
+        var key2 = new PersistedApiKey() { KeyName = "SecondKey" };
+        var apiKey2 = await validator.GenerateApiKey(key2);
+        Assert.AreNotEqual(apiKeyString, apiKey2);
 
         // Validate the key
         var validated = await validator.TryValidate(apiKeyString);
@@ -50,6 +57,7 @@ public class BasicKeyTests
     [DataRow(HashAlgorithmType.SHA256)]
     [DataRow(HashAlgorithmType.SHA512)]
     [DataRow(HashAlgorithmType.BCrypt)]
+    [DataRow(HashAlgorithmType.PBKDF2100K)]
     public async Task TestFailureModes(HashAlgorithmType hashType)
     {
         var repository = new TestRepository();
@@ -104,13 +112,13 @@ public class BasicKeyTests
         Assert.AreEqual("Key and client secret are not properly delimited.", result3.Message);
         
         // Try properly delimited garbage
-        var result4 = await validator.TryValidate(repository.Algorithm.Prefix + "abc:123" + repository.Algorithm.Suffix);
+        var result4 = await validator.TryValidate(repository.Algorithm.Prefix + $"abc{ApiKeyValidator.Separator}123" + repository.Algorithm.Suffix);
         Assert.IsNotNull(result4);
         Assert.IsFalse(result4.Success);
         Assert.AreEqual("Key ID is not properly formatted.", result4.Message);
         
         // Try properly delimited garbage
-        var result5 = await validator.TryValidate(repository.Algorithm.Prefix + Convert.ToBase64String(Guid.NewGuid().ToByteArray()) + ":123" + repository.Algorithm.Suffix);
+        var result5 = await validator.TryValidate(repository.Algorithm.Prefix + Base58.Ripple.Encode(Guid.NewGuid().ToByteArray()) + $"{ApiKeyValidator.Separator}123" + repository.Algorithm.Suffix);
         Assert.IsNotNull(result5);
         Assert.IsFalse(result5.Success);
         Assert.AreEqual("Repository does not contain a key matching this ID.", result5.Message);

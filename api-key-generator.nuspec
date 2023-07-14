@@ -23,13 +23,19 @@
 			July 13, 2023
 			
 			Switch to BCrypt for the default API key hash algorithm.
+			* Support for SHA256, SHA512, BCrypt, and PBKDF2 with 100K iterations.
+			* Switched from Base64 encoding to Base58, and replaced the colon separator with an underscore. Using
+			this approach, no un-copyable characters appear in an API key.  This should lead to users being able
+			to double click an API key and copy it easily.
+			* Added many more tests.
 		</releaseNotes>
 		<copyright>Copyright 2023 - 2023</copyright>
     	<tags>apikey rest authentication authorization bearer token api-key</tags>
 		<repository type="git" url="https://github.com/tspence/csharp-searchlight" />
 		<dependencies>
-			<group targetFramework=".NETStandard2.0">
+			<group targetFramework=".NETStandard2.1">
 				<dependency id="BCrypt.Net-Next" version="4.0.3" />
+				<dependency id="SimpleBase" version="4.0.0" />
 			</group>
 		</dependencies>
 	</metadata>
@@ -38,6 +44,6 @@
 		<file src=".\README.md" target="docs/README.md"/>
 		<file src=".\api-key-generator.png" target="docs/api-key-generator.png"/>
 		<file src=".\PatchNotes.md" target="docs/PatchNotes.md"/>
-		<file src="src\bin\Release\netstandard2.0\*" target="lib\netstandard20" />
+		<file src="src\bin\Release\netstandard2.1\*" target="lib\netstandard20" />
 	</files>
 </package>

@@ -1,5 +1,6 @@
 ﻿using System;
 using ApiKeyGenerator.Interfaces;
+using SimpleBase;
 
 namespace ApiKeyGenerator.Keys
 {
@@ -29,8 +30,8 @@ namespace ApiKeyGenerator.Keys
         public string ToApiKeyString(ApiKeyAlgorithm algorithm)
         {
             var idBytes = ApiKeyId.ToByteArray();
-            var idString = Convert.ToBase64String(idBytes);
-            return $"{algorithm.Prefix}{idString}:{ClientSecret}{algorithm.Suffix}";
+            var idString = ApiKeyValidator.Encode(idBytes);
+            return $"{algorithm.Prefix}{idString}{ApiKeyValidator.Separator}{ClientSecret}{algorithm.Suffix}";
         }
     }
 }
