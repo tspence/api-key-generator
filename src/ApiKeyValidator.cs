@@ -75,13 +75,14 @@ namespace ApiKeyGenerator
         /// <summary>
         /// Parses the key and throws an exception if the key is malformed
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="algorithm"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public ClientApiKey ParseKey(string key, ApiKeyAlgorithm algorithm)
+        /// <param name="keyString">The client API key string to test</param>
+        /// <param name="algorithm">The algorithm to use, or null to use the default</param>
+        /// <returns>The matching API key if successful</returns>
+        /// <exception cref="Exception">If not successful, an exception explaining why it was not validated</exception>
+        public ClientApiKey ParseKey(string keyString, ApiKeyAlgorithm algorithm = null)
         {
-            if (!TryParseKey(key, algorithm, out var value, out var message))
+            var realAlgorithm = algorithm ?? ApiKeyAlgorithm.DefaultAlgorithm;
+            if (!TryParseKey(keyString, realAlgorithm, out var value, out var message))
             {
                 throw new Exception(message);
             }

@@ -78,6 +78,12 @@ public class BasicKeyTests
         Assert.IsNotNull(result0);
         Assert.IsFalse(result0.Success);
         Assert.AreEqual("Key is null or empty.", result0.Message);
+        
+        // Alternative interfaces test
+        var matchingKey = validator.ParseKey(apiKeyString, repository.Algorithm);
+        Assert.IsNotNull(matchingKey);
+        var ex = Assert.ThrowsException<Exception>(() => validator.ParseKey("", null));
+        Assert.AreEqual("Key is null or empty.", ex.Message);
 
         // Break the prefix and attempt to validate
         var result1 = await validator.TryValidate("extra" + apiKeyString);
