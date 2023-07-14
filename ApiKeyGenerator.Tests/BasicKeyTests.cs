@@ -8,22 +8,24 @@ namespace ApiKeyGenerator.Tests;
 public class BasicKeyTests
 {
     [DataTestMethod]
+    [DataRow(null)]
     [DataRow(HashAlgorithmType.SHA256)]
     [DataRow(HashAlgorithmType.SHA512)]
     [DataRow(HashAlgorithmType.BCrypt)]
-    public async Task TestAlgorithm(HashAlgorithmType hashType)
+    public async Task TestAlgorithm(HashAlgorithmType? hashType)
     {
-        var repository = new TestRepository
+        var repository = new TestRepository();
+        if (hashType != null)
         {
-            Algorithm = new ApiKeyAlgorithm()
+            repository.Algorithm = new ApiKeyAlgorithm()
             {
-                Hash = hashType,
+                Hash = hashType.Value,
                 SaltLength = 64,
                 ClientSecretLength = 64,
                 Prefix = "key",
                 Suffix = "yek",
-            }
-        };
+            };
+        }
         var validator = new ApiKeyValidator(repository);
         
         // Generate a key
@@ -50,16 +52,14 @@ public class BasicKeyTests
     [DataRow(HashAlgorithmType.BCrypt)]
     public async Task TestFailureModes(HashAlgorithmType hashType)
     {
-        var repository = new TestRepository
+        var repository = new TestRepository();
+        repository.Algorithm = new ApiKeyAlgorithm()
         {
-            Algorithm = new ApiKeyAlgorithm()
-            {
-                Hash = hashType,
-                SaltLength = 64,
-                ClientSecretLength = 64,
-                Prefix = "key",
-                Suffix = "yek",
-            }
+            Hash = hashType,
+            SaltLength = 64,
+            ClientSecretLength = 64,
+            Prefix = "key",
+            Suffix = "yek",
         };
         var validator = new ApiKeyValidator(repository);
         
@@ -72,12 +72,18 @@ public class BasicKeyTests
         var apiKeyString = await validator.GenerateApiKey(persistedKey);
         Assert.AreNotEqual(string.Empty, apiKeyString);
         Assert.AreNotEqual(Guid.Empty, persistedKey.ApiKeyId);
+        
+        // Trivial test
+        var result0 = await validator.TryValidate(null);
+        Assert.IsNotNull(result0);
+        Assert.IsFalse(result0.Success);
+        Assert.AreEqual("Key is null or empty.", result0.Message);
 
         // Break the prefix and attempt to validate
-        var result = await validator.TryValidate("extra" + apiKeyString);
-        Assert.IsNotNull(result);
-        Assert.IsFalse(result.Success);
-        Assert.AreEqual("Key prefix does not match any supported key algorithms.", result.Message);
+        var result1 = await validator.TryValidate("extra" + apiKeyString);
+        Assert.IsNotNull(result1);
+        Assert.IsFalse(result1.Success);
+        Assert.AreEqual("Key prefix does not match any supported key algorithms.", result1.Message);
 
         // Break the suffix and attempt to validate
         var result2 = await validator.TryValidate(apiKeyString + "extra");
