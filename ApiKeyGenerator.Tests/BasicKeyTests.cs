@@ -29,6 +29,7 @@ public class BasicKeyTests
             };
         }
         var validator = new ApiKeyValidator(repository);
+        var algorithm = repository.Algorithm ?? ApiKeyAlgorithm.DefaultAlgorithm;
         
         // Generate a key
         var persistedKey = new PersistedApiKey
@@ -45,42 +46,6 @@ public class BasicKeyTests
         var apiKey2 = await validator.GenerateApiKey(key2);
         Assert.AreNotEqual(apiKeyString, apiKey2);
 
-        // Validate the key
-        var validated = await validator.TryValidate(apiKeyString);
-        Assert.IsNotNull(validated);
-        Assert.IsTrue(validated.Success);
-        Assert.AreEqual(persistedKey.ApiKeyId, validated.ApiKey.ApiKeyId);
-        Assert.AreEqual(persistedKey.KeyName, validated.ApiKey.KeyName);
-    }
-
-    [DataTestMethod]
-    [DataRow(HashAlgorithmType.SHA256)]
-    [DataRow(HashAlgorithmType.SHA512)]
-    [DataRow(HashAlgorithmType.BCrypt)]
-    [DataRow(HashAlgorithmType.PBKDF2100K)]
-    public async Task TestFailureModes(HashAlgorithmType hashType)
-    {
-        var repository = new TestRepository();
-        repository.Algorithm = new ApiKeyAlgorithm()
-        {
-            Hash = hashType,
-            SaltLength = 64,
-            ClientSecretLength = 64,
-            Prefix = "key",
-            Suffix = "yek",
-        };
-        var validator = new ApiKeyValidator(repository);
-        
-        // Generate a key
-        var persistedKey = new PersistedApiKey
-        {
-            KeyName = "TestKeyGeneration"
-        };
-        Assert.AreEqual(Guid.Empty, persistedKey.ApiKeyId);
-        var apiKeyString = await validator.GenerateApiKey(persistedKey);
-        Assert.AreNotEqual(string.Empty, apiKeyString);
-        Assert.AreNotEqual(Guid.Empty, persistedKey.ApiKeyId);
-        
         // Trivial test
         var result0 = await validator.TryValidate(null);
         Assert.IsNotNull(result0);
@@ -106,21 +71,28 @@ public class BasicKeyTests
         Assert.AreEqual("This key was truncated and is missing some data.", result2.Message);
 
         // Try random garbage
-        var result3 = await validator.TryValidate(repository.Algorithm.Prefix + "abc" + repository.Algorithm.Suffix);
+        var result3 = await validator.TryValidate(algorithm.Prefix + "abc" + algorithm.Suffix);
         Assert.IsNotNull(result3);
         Assert.IsFalse(result3.Success);
         Assert.AreEqual("Key and client secret are not properly delimited.", result3.Message);
         
         // Try properly delimited garbage
-        var result4 = await validator.TryValidate(repository.Algorithm.Prefix + $"abc{ApiKeyValidator.Separator}123" + repository.Algorithm.Suffix);
+        var result4 = await validator.TryValidate(algorithm.Prefix + $"abc{ApiKeyValidator.Separator}123" + algorithm.Suffix);
         Assert.IsNotNull(result4);
         Assert.IsFalse(result4.Success);
         Assert.AreEqual("Key ID is not properly formatted.", result4.Message);
         
         // Try properly delimited garbage
-        var result5 = await validator.TryValidate(repository.Algorithm.Prefix + Base58.Ripple.Encode(Guid.NewGuid().ToByteArray()) + $"{ApiKeyValidator.Separator}123" + repository.Algorithm.Suffix);
+        var result5 = await validator.TryValidate(algorithm.Prefix + Base58.Ripple.Encode(Guid.NewGuid().ToByteArray()) + $"{ApiKeyValidator.Separator}123" + algorithm.Suffix);
         Assert.IsNotNull(result5);
         Assert.IsFalse(result5.Success);
         Assert.AreEqual("Repository does not contain a key matching this ID.", result5.Message);
+        
+        // Validate the key successfully this time
+        var validated = await validator.TryValidate(apiKeyString);
+        Assert.IsNotNull(validated);
+        Assert.IsTrue(validated.Success);
+        Assert.AreEqual(persistedKey.ApiKeyId, validated.ApiKey.ApiKeyId);
+        Assert.AreEqual(persistedKey.KeyName, validated.ApiKey.KeyName);
     }
 }
