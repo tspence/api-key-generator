@@ -30,6 +30,14 @@ For usability, this library works on a few basic principles:
 * Salt and hash values can be stored wherever you like, as long as you can fetch them back for validation.  
 * The validation and key generation logic are as general purpose as possible so you can fit this library anywhere.
 
+# Citations and references
+
+The following articles are relevant to this library:
+* [GitHub 2021 article on API key formats](https://github.blog/2021-04-05-behind-githubs-new-authentication-token-formats/)
+* [ProcedureFlow 2021 article on API key usability](https://medium.com/procedureflow-engineering/building-api-authentication-at-procedureflow-4d1fe78bb293)
+* [My 2023 blog on API key usability](https://tedspence.com/what-makes-a-good-api-key-system-c7211de5ad33)
+* [Netmux 2018 article on creating a hashcat computer for brute force attacks](https://www.netmux.com/blog/how-to-build-a-password-cracking-rig)
+
 # Algorithm Performance
 
 These performance statistics were measured on my laptop, a Dell I7-12700H.  Benchmarks measure the length of time
