@@ -4,7 +4,7 @@ using BenchmarkDotNet.Running;
 
 namespace ApiKeyGenerator.Benchmarks
 {
-    class Program
+    static class Program
     {
         static void Main(string[] args)
         {
