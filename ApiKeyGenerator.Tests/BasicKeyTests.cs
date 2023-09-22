@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using ApiKeyGenerator.Exceptions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ApiKeyGenerator.Tests;
@@ -54,7 +55,7 @@ public class BasicKeyTests
         // Alternative interfaces test
         var matchingKey = validator.ParseKey(apiKeyString, repository.Algorithm);
         Assert.IsNotNull(matchingKey);
-        var ex = Assert.ThrowsException<Exception>(() => validator.ParseKey("", null));
+        var ex = Assert.ThrowsException<InvalidKeyException>(() => validator.ParseKey("", null));
         Assert.AreEqual("Key is null or empty.", ex.Message);
 
         // Break the prefix and attempt to validate

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using ApiKeyGenerator.Exceptions;
 using ApiKeyGenerator.Interfaces;
 using ApiKeyGenerator.Keys;
 using SimpleBase;
@@ -48,29 +49,26 @@ namespace ApiKeyGenerator
             }
             
             // Check all supported algorithms to see if this API key is valid
-            foreach (var algorithm in algorithms)
+            foreach (var algorithm in algorithms.Where(algorithm => clientApiKeyString.StartsWith(algorithm.Prefix)))
             {
-                if (clientApiKeyString.StartsWith(algorithm.Prefix))
+                if (!TryParseKey(clientApiKeyString, algorithm, out var clientApiKey, out var message))
                 {
-                    if (!TryParseKey(clientApiKeyString, algorithm, out var clientApiKey, out var message))
-                    {
-                        return new ApiKeyResult() { Message = message };
-                    }
-                    
-                    // Fetch the matching persisted key
-                    var persistedApiKey = await _repository.GetKey(clientApiKey.ApiKeyId);
-                    if (persistedApiKey == null)
-                    {
-                        return new ApiKeyResult()
-                            { Message = $"Repository does not contain a key matching this ID." };
-                    }
-                    if (TestKeys(algorithm, clientApiKey, persistedApiKey))
-                    {
-                        return new ApiKeyResult() { Success = true, ApiKey = persistedApiKey };
-                    }
-
-                    return new ApiKeyResult() { Message = "Invalid API key hash." };
+                    return new ApiKeyResult() { Message = message };
                 }
+                    
+                // Fetch the matching persisted key
+                var persistedApiKey = await _repository.GetKey(clientApiKey.ApiKeyId);
+                if (persistedApiKey == null)
+                {
+                    return new ApiKeyResult()
+                        { Message = $"Repository does not contain a key matching this ID." };
+                }
+                if (TestKeys(algorithm, clientApiKey, persistedApiKey))
+                {
+                    return new ApiKeyResult() { Success = true, ApiKey = persistedApiKey };
+                }
+
+                return new ApiKeyResult() { Message = "Invalid API key hash." };
             }
 
             return new ApiKeyResult() { Message = "Key prefix does not match any supported key algorithms." };
@@ -88,7 +86,7 @@ namespace ApiKeyGenerator
             var realAlgorithm = algorithm ?? ApiKeyAlgorithm.DefaultAlgorithm;
             if (!TryParseKey(keyString, realAlgorithm, out var value, out var message))
             {
-                throw new Exception(message);
+                throw new InvalidKeyException(message);
             }
 
             return value;
@@ -187,9 +185,9 @@ namespace ApiKeyGenerator
             persisted.Salt = salt;
             
             // Save this API key into the repository
-            if (!(await _repository.SaveKey(persisted)))
+            if (!await _repository.SaveKey(persisted))
             {
-                throw new Exception("Unable to persist new API key in repository.");
+                throw new KeyPersistFailedException("Unable to persist new API key in repository.");
             }
             
             // Return the client's key to them
@@ -272,7 +270,7 @@ namespace ApiKeyGenerator
                     }
             }
 
-            throw new Exception($"Unknown hash type {algorithm.Hash}");
+            throw new InvalidAlgorithmException($"Unknown hash type {algorithm.Hash}");
         }
     }
 }

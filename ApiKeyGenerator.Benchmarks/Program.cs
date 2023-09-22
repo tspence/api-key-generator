@@ -9,6 +9,7 @@ namespace ApiKeyGenerator.Benchmarks
         static void Main(string[] args)
         {
             var summary = BenchmarkRunner.Run<AlgorithmBenchmarks>();
+            Console.WriteLine(summary);
         }
     }
 }
