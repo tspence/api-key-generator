@@ -49,11 +49,15 @@ namespace ApiKeyGenerator
             }
             
             // Check all supported algorithms to see if this API key is valid
+            int prefixMatches = 0;
+            string lastAlgorithmFailedMessage = string.Empty;
             foreach (var algorithm in algorithms.Where(algorithm => clientApiKeyString.StartsWith(algorithm.Prefix)))
             {
+                prefixMatches++;
                 if (!TryParseKey(clientApiKeyString, algorithm, out var clientApiKey, out var message))
                 {
-                    return new ApiKeyResult() { Message = message };
+                    lastAlgorithmFailedMessage = message;
+                    continue;
                 }
                     
                 // Fetch the matching persisted key
@@ -67,11 +71,18 @@ namespace ApiKeyGenerator
                 {
                     return new ApiKeyResult() { Success = true, ApiKey = persistedApiKey };
                 }
-
-                return new ApiKeyResult() { Message = "Invalid API key hash." };
             }
 
-            return new ApiKeyResult() { Message = "Key prefix does not match any supported key algorithms." };
+            // At least one prefix matched, but the keys weren't valid
+            if (prefixMatches == 1)
+            {
+                return new ApiKeyResult() { Message = lastAlgorithmFailedMessage };
+            }
+            if (prefixMatches == 0)
+            {
+                return new ApiKeyResult() { Message = "Key prefix does not match any supported key algorithms." };
+            }
+            return new ApiKeyResult() { Message = "Invalid API key hash." };
         }
 
         /// <summary>
@@ -155,10 +166,11 @@ namespace ApiKeyGenerator
         /// will be the client's API key string that they will use to authenticate.
         /// </summary>
         /// <param name="persisted">A key object that contains whatever claims you want.</param>
+        /// <param name="algorithm">The algorithm to use when generating this key, or null to use the default algorithm.</param>
         /// <returns>The client API key string.</returns>
-        public async Task<string> GenerateApiKey(IPersistedApiKey persisted)
+        public async Task<string> GenerateApiKey(IPersistedApiKey persisted, ApiKeyAlgorithm algorithm = null)
         {
-            var algorithm = _repository.GetNewKeyAlgorithm() ?? ApiKeyAlgorithm.DefaultAlgorithm;
+            algorithm ??= _repository.GetNewKeyAlgorithm() ?? ApiKeyAlgorithm.DefaultAlgorithm;
             var keyId = Guid.NewGuid();
             var rand = RandomNumberGenerator.Create();
             var secretBytes = new byte[algorithm.ClientSecretLength];
