@@ -33,7 +33,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="..\..\README.md" PackagePath="/docs" Pack="true" />
+        <None Include="..\README.md" PackagePath="/docs" Pack="true" />
         <None Include="api-key-generator.png" PackagePath="/docs" Pack="true" />
         <None Include="PatchNotes.md" PackagePath="/docs" Pack="true" />
     </ItemGroup>
