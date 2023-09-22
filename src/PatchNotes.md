@@ -1,3 +1,8 @@
+# 0.9.4
+September 21, 2023
+
+Update library to avoid usage of nuspec files.
+
 # 0.9.3
 July 14, 2023
 

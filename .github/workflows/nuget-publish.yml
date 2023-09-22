@@ -31,8 +31,8 @@ jobs:
           nuget-version: "5.x"
 
       - name: Run Nuget pack
-        run: nuget pack api-key-generator.nuspec
+        run: dotnet pack -c Release
 
       - name: Push generated package to GitHub registry
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: nuget push *.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}
+        run: dotnet nuget push src/bin/Release/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{secrets.NUGET_API_KEY}}

@@ -11,8 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{9A88F86E
 		.gitignore = .gitignore
 		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
 		.github\workflows\nuget-publish.yml = .github\workflows\nuget-publish.yml
-		api-key-generator.nuspec = api-key-generator.nuspec
-		PatchNotes.md = PatchNotes.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiKeyGenerator.Benchmarks", "ApiKeyGenerator.Benchmarks\ApiKeyGenerator.Benchmarks.csproj", "{D4B63829-8924-4551-A067-91165F759201}"

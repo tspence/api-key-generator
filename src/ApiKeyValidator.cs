@@ -215,7 +215,12 @@ namespace ApiKeyGenerator
             return new Tuple<byte[], byte[]>(secretBytes, saltBytes);
         }
 
-        internal static string Encode(byte[] bytes)
+        /// <summary>
+        /// Encode a series of bytes in the Ripple Base58 format
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
+        public static string Encode(byte[] bytes)
         {
             return Base58.Ripple.Encode(bytes);
         }

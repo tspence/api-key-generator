@@ -4,11 +4,36 @@
         <TargetFramework>netstandard2.1</TargetFramework>
         <ImplicitUsings>false</ImplicitUsings>
         <Nullable>disable</Nullable>
+        <PackageReadmeFile>docs/README.md</PackageReadmeFile>
+        <description>
+            This library only performs the key generation and key validation functions that your service requires.
+            It provides interfaces for you to integrate with key generation systems, database storage systems, and
+            authentication validation systems.  Support for multiple key algorithms means you can update your key
+            generation logic as security best practices evolve, while ensuring that old keys will continue to work.
+        </description>
+        <PackageTags>apikey rest authentication authorization bearer token api-key</PackageTags>
+        <Copyright>Copyright 2021 - 2023</Copyright>
+        <PackageReleaseNotes>
+            # 0.9.4
+            September 21, 2023
+
+            Update library to avoid usage of nuspec files
+        </PackageReleaseNotes>
+        <PackageIcon>docs/api-key-generator.png</PackageIcon>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <Version>0.9.4</Version>
+        <Authors>Ted Spence</Authors>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
-      <PackageReference Include="SimpleBase" Version="4.0.0" />
+        <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+        <PackageReference Include="SimpleBase" Version="4.0.0" />
     </ItemGroup>
 
+    <ItemGroup>
+        <None Include="..\..\README.md" PackagePath="/docs" Pack="true" />
+        <None Include="api-key-generator.png" PackagePath="/docs" Pack="true" />
+        <None Include="PatchNotes.md" PackagePath="/docs" Pack="true" />
+    </ItemGroup>
 </Project>
