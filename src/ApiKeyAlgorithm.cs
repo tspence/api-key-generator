@@ -8,7 +8,7 @@
         /// * Hash algorithm is BCrypt
         /// * Client secret and salt are both 512 bits (64 bytes)
         /// </summary>
-        public static ApiKeyAlgorithm DefaultAlgorithm = new ApiKeyAlgorithm()
+        public static ApiKeyAlgorithm DefaultAlgorithm { get; } = new ApiKeyAlgorithm()
         {
             Prefix = "kpb",
             Suffix = "aei",

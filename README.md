@@ -1,6 +1,5 @@
 [![Nuget](https://img.shields.io/nuget/v/ApiKeyGenerator)](https://www.nuget.org/packages/ApiKeyGenerator)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/tspence/api-key-generator/dotnet.yml?branch=main)](https://github.com/tspence/api-key-generator/)
-[![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=tspence_api-key-generator&metric=coverage)](https://sonarcloud.io/summary/overall?id=tspence_api-key-generator)
 [![SonarCloud Bugs](https://sonarcloud.io/api/project_badges/measure?project=tspence_api-key-generator&metric=bugs)](https://sonarcloud.io/summary/overall?id=tspence_api-key-generator)
 [![SonarCloud Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=tspence_api-key-generator&metric=vulnerabilities)](https://sonarcloud.io/summary/overall?id=tspence_api-key-generator)
 
