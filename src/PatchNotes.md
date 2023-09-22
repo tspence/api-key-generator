@@ -2,6 +2,7 @@
 September 21, 2023
 
 Update library to avoid usage of nuspec files.
+Refactoring to address some SonarCloud reported items.
 
 # 0.9.3
 July 14, 2023
