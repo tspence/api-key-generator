@@ -74,15 +74,15 @@ namespace ApiKeyGenerator
             }
 
             // At least one prefix matched, but the keys weren't valid
-            if (prefixMatches == 1)
+            switch (prefixMatches)
             {
-                return new ApiKeyResult() { Message = lastAlgorithmFailedMessage };
+                case 0:
+                    return new ApiKeyResult() { Message = "Key prefix does not match any supported key algorithms." };
+                case 1:
+                    return new ApiKeyResult() { Message = lastAlgorithmFailedMessage };
+                default:
+                    return new ApiKeyResult() { Message = "Invalid API key hash." };
             }
-            if (prefixMatches == 0)
-            {
-                return new ApiKeyResult() { Message = "Key prefix does not match any supported key algorithms." };
-            }
-            return new ApiKeyResult() { Message = "Invalid API key hash." };
         }
 
         /// <summary>
