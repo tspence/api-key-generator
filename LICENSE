@@ -26,3 +26,4 @@ SOFTWARE.
 Additional License Information
 
 * Icon by WiStudio from https://freeicons.io/non-fungible-token-icon-set-5/ownership-nonfungibletoken-nft-holder-owner-key-authority-icon-313039
+* Base58 ripple logic adapted from https://gist.github.com/micli/c242edd2a81a8f0d9f7953842bcc24f1

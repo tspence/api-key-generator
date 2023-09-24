@@ -1,3 +1,8 @@
+# 0.9.5
+September 24, 2023
+
+Support NetStandard 2.0; remove dependency on SimpleBase.
+
 # 0.9.4
 September 21, 2023
 

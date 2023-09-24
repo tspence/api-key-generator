@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
+        <TargetFramework>netstandard2.0</TargetFramework>
         <ImplicitUsings>false</ImplicitUsings>
         <Nullable>disable</Nullable>
         <PackageReadmeFile>docs/README.md</PackageReadmeFile>
@@ -14,22 +14,20 @@
         <PackageTags>apikey rest authentication authorization bearer token api-key</PackageTags>
         <Copyright>Copyright 2021 - 2023</Copyright>
         <PackageReleaseNotes>
-            # 0.9.4
-            September 21, 2023
+            # 0.9.5
+            September 24, 2023
 
-            Update library to avoid usage of nuspec files.
-            Refactoring to address some SonarCloud reported items.
+            Support NetStandard 2.0; remove dependency on SimpleBase.
         </PackageReleaseNotes>
         <PackageIcon>docs/api-key-generator.png</PackageIcon>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <Version>0.9.4</Version>
+        <Version>0.9.5</Version>
         <Authors>Ted Spence</Authors>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
-        <PackageReference Include="SimpleBase" Version="4.0.0" />
     </ItemGroup>
 
     <ItemGroup>

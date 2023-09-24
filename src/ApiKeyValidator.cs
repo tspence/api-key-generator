@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using ApiKeyGenerator.Exceptions;
 using ApiKeyGenerator.Interfaces;
 using ApiKeyGenerator.Keys;
-using SimpleBase;
 
 namespace ApiKeyGenerator
 {
@@ -170,7 +169,7 @@ namespace ApiKeyGenerator
         /// <returns>The client API key string.</returns>
         public async Task<string> GenerateApiKey(IPersistedApiKey persisted, ApiKeyAlgorithm algorithm = null)
         {
-            algorithm ??= _repository.GetNewKeyAlgorithm() ?? ApiKeyAlgorithm.DefaultAlgorithm;
+            algorithm = algorithm ?? _repository.GetNewKeyAlgorithm() ?? ApiKeyAlgorithm.DefaultAlgorithm;
             var keyId = Guid.NewGuid();
             var rand = RandomNumberGenerator.Create();
             var secretBytes = new byte[algorithm.ClientSecretLength];
@@ -232,7 +231,7 @@ namespace ApiKeyGenerator
         /// <returns></returns>
         public static string Encode(byte[] bytes)
         {
-            return Base58.Ripple.Encode(bytes);
+            return Base58Ripple.Encode(bytes);
         }
 
         internal static bool TryDecode(string text, int expectedLength, out byte[] bytes)
@@ -244,7 +243,7 @@ namespace ApiKeyGenerator
             try
             {
                 bytes = new byte[expectedLength];
-                var success = Base58.Ripple.TryDecode(text, bytes, out var numBytesWritten);
+                var success = Base58Ripple.TryDecode(text, bytes, out var numBytesWritten);
                 return success && numBytesWritten == expectedLength;
             }
             catch
