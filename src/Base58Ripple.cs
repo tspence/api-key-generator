@@ -9,7 +9,7 @@ namespace ApiKeyGenerator
     public static class Base58Ripple
     {
         // We use the Ripple alphabet
-        public static readonly char[]
+        private static readonly char[]
             _alphabet = "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz".ToCharArray();
 
         private static int[] _indexes = null;
@@ -111,7 +111,7 @@ namespace ApiKeyGenerator
 
                 if (digit58 < 0)
                 {
-                    //throw new ArgumentException($"Illegal character {c} ({(int)c} at position {i}");
+                    // Illegal character {c} ({(int)c} at position {i}
                     return false;
                 }
 
