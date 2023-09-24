@@ -1,6 +1,4 @@
 ﻿using System;
-using ApiKeyGenerator.Interfaces;
-using SimpleBase;
 
 namespace ApiKeyGenerator.Keys
 {
