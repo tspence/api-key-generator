@@ -9,7 +9,12 @@ using ApiKeyGenerator.Keys;
 
 namespace ApiKeyGenerator
 {
-    public class ApiKeyValidator
+    /// <summary>
+    /// Represents a direct API key system that always validates every key and always
+    /// checks the data store for a stored key.  For a more performant version of the
+    /// API key system, consider using CachedValidator.
+    /// </summary>
+    public class ApiKeyValidator : IApiKeyValidator
     {
         private readonly IApiKeyRepository _repository;
 

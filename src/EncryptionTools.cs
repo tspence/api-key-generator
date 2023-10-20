@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using ApiKeyGenerator.Exceptions;
 
 namespace ApiKeyGenerator
@@ -104,6 +105,23 @@ namespace ApiKeyGenerator
             }
 
             throw new InvalidAlgorithmException($"Unknown hash type {algorithm.Hash}");
+        }
+
+        /// <summary>
+        /// Uses the SHA512 algorithm to create a simple and quick hash of a value, suitable for
+        /// storing in a dictionary. Do not persist this value to disk since it can be attacked
+        /// with a rainbow table.
+        /// </summary>
+        /// <param name="rawString">The raw string to hash</param>
+        /// <returns>The SHA512 hash in Base64 format</returns>
+        public static string QuickStringHash(string rawString)
+        {
+            using (var sha512 = SHA512.Create())
+            {
+                var rawBytes = Encoding.UTF8.GetBytes(rawString);
+                var hashBytes = sha512.ComputeHash(rawBytes);
+                return Convert.ToBase64String(hashBytes);
+            }
         }
     }
 }
