@@ -140,7 +140,7 @@ namespace ApiKeyGenerator
             
             // Extract the key ID and client secret
             var keyId = key.Substring(algorithm.Prefix.Length, pos - algorithm.Prefix.Length);
-            if (!TryDecode(keyId, 16, out var keyBytes))
+            if (!EncryptionTools.TryDecode(keyId, 16, out var keyBytes))
             {
                 message = "Key ID is not properly formatted.";
                 return false;
@@ -174,7 +174,7 @@ namespace ApiKeyGenerator
             var rand = RandomNumberGenerator.Create();
             var secretBytes = new byte[algorithm.ClientSecretLength];
             rand.GetBytes(secretBytes);
-            var secret = Encode(secretBytes);
+            var secret = EncryptionTools.Encode(secretBytes);
             string salt;
             if (algorithm.Hash == HashAlgorithmType.BCrypt)
             {
@@ -184,7 +184,7 @@ namespace ApiKeyGenerator
             {
                 var saltBytes = new byte[algorithm.SaltLength];
                 rand.GetBytes(saltBytes);
-                salt = Encode(saltBytes);
+                salt = EncryptionTools.Encode(saltBytes);
             }
 
             // Construct client key
@@ -192,7 +192,7 @@ namespace ApiKeyGenerator
             
             // Fill information into persisted key
             persisted.ApiKeyId = keyId;
-            persisted.Hash = Hash(algorithm, secret, salt);
+            persisted.Hash = EncryptionTools.Hash(algorithm, secret, salt);
             persisted.Salt = salt;
             
             // Save this API key into the repository
@@ -208,80 +208,8 @@ namespace ApiKeyGenerator
         private bool TestKeys(ApiKeyAlgorithm algorithm, ClientApiKey clientApiKey, IPersistedApiKey persistedApiKey)
         {
             // Compute hash and see if it matches
-            var computedHash = Hash(algorithm, clientApiKey.ClientSecret, persistedApiKey.Salt);
+            var computedHash = EncryptionTools.Hash(algorithm, clientApiKey.ClientSecret, persistedApiKey.Salt);
             return string.Equals(computedHash, persistedApiKey.Hash);
-        }
-
-        private static Tuple<byte[], byte[]> SecretAndSaltToBytes(ApiKeyAlgorithm algorithm, string secret, string salt)
-        {
-            var s1 = TryDecode(secret, algorithm.ClientSecretLength, out var secretBytes);
-            var s2 = TryDecode(salt, algorithm.SaltLength, out var saltBytes);
-            if (!s1 || !s2)
-            {
-                return new Tuple<byte[], byte[]>(null, null);
-            }
-
-            return new Tuple<byte[], byte[]>(secretBytes, saltBytes);
-        }
-
-        /// <summary>
-        /// Encode a series of bytes in the Ripple Base58 format
-        /// </summary>
-        /// <param name="bytes"></param>
-        /// <returns></returns>
-        public static string Encode(byte[] bytes)
-        {
-            return Base58Ripple.Encode(bytes);
-        }
-
-        internal static bool TryDecode(string text, int expectedLength, out byte[] bytes)
-        {
-            bytes = Array.Empty<byte>();
-            
-            // You would think that a function called "TryDecode" would not throw an exception.
-            // However, you would be wrong.
-            try
-            {
-                bytes = new byte[expectedLength];
-                var success = Base58Ripple.TryDecode(text, bytes, out var numBytesWritten);
-                return success && numBytesWritten == expectedLength;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        private static string Hash(ApiKeyAlgorithm algorithm, string secret, string salt)
-        {
-            switch (algorithm.Hash)
-            {
-                case HashAlgorithmType.SHA256:
-                    using (var sha256 = SHA256.Create())
-                    {
-                        var rawBytes = SecretAndSaltToBytes(algorithm, secret, salt);
-                        var hashBytes = sha256.ComputeHash(rawBytes.Item1.Union(rawBytes.Item2).ToArray());
-                        return Convert.ToBase64String(hashBytes);
-                    }
-                case HashAlgorithmType.SHA512:
-                    using (var sha512 = SHA512.Create())
-                    {
-                        var rawBytes = SecretAndSaltToBytes(algorithm, secret, salt);
-                        var hashBytes = sha512.ComputeHash(rawBytes.Item1.Union(rawBytes.Item2).ToArray());
-                        return Encode(hashBytes);
-                    }
-                case HashAlgorithmType.BCrypt:
-                    return BCrypt.Net.BCrypt.HashPassword(secret, salt);
-                case HashAlgorithmType.PBKDF2100K:
-                    var pbkBytes = SecretAndSaltToBytes(algorithm, secret, salt);
-                    using (var pbk = new Rfc2898DeriveBytes(pbkBytes.Item1, pbkBytes.Item2, 100_000))
-                    {
-                        var hash = pbk.GetBytes(64);
-                        return Encode(hash);
-                    }
-            }
-
-            throw new InvalidAlgorithmException($"Unknown hash type {algorithm.Hash}");
         }
     }
 }
