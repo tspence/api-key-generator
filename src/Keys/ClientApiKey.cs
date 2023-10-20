@@ -28,7 +28,7 @@ namespace ApiKeyGenerator.Keys
         public string ToApiKeyString(ApiKeyAlgorithm algorithm)
         {
             var idBytes = ApiKeyId.ToByteArray();
-            var idString = ApiKeyValidator.Encode(idBytes);
+            var idString = EncryptionTools.Encode(idBytes);
             return $"{algorithm.Prefix}{idString}{ApiKeyValidator.Separator}{ClientSecret}{algorithm.Suffix}";
         }
     }

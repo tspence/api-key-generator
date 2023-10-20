@@ -84,7 +84,7 @@ public class BasicKeyTests
         Assert.AreEqual("Key ID is not properly formatted.", result4.Message);
         
         // Try properly delimited garbage
-        var result5 = await validator.TryValidate(algorithm.Prefix + ApiKeyValidator.Encode(Guid.NewGuid().ToByteArray()) + $"{ApiKeyValidator.Separator}123" + algorithm.Suffix);
+        var result5 = await validator.TryValidate(algorithm.Prefix + EncryptionTools.Encode(Guid.NewGuid().ToByteArray()) + $"{ApiKeyValidator.Separator}123" + algorithm.Suffix);
         Assert.IsNotNull(result5);
         Assert.IsFalse(result5.Success);
         Assert.AreEqual("Repository does not contain a key matching this ID.", result5.Message);
